@@ -126,7 +126,7 @@ abstract class collections{	//Save functions of SQL Operation by ActiveRecord
 
 	static public function SQLUpdate_11(){	//Use ActiveRecord to Generate and Run SQL code
 		$record = new static::$modelNM();	//instantiate new object
-		$record->id = 10;
+		$record->id = 11;
 		$record->email = 'kel@njit.edu';
 		$record->fname = "Dalven";
 		$record->lname = "Kelwen";
