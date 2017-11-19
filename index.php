@@ -127,11 +127,11 @@ abstract class collections{	//Save functions of SQL Operation by ActiveRecord
 	static public function SQLUpdate_11(){	//Use ActiveRecord to Generate and Run SQL code
 		$record = new static::$modelNM();	//instantiate new object
 		$record->id = 11;
-		$record->email = 'kel@njit.edu';
-		$record->fname = "Dalven";
-		$record->lname = "Kelwen";
+		$record->email = 'kzzz@njit.edu';
+		$record->fname = "Kan";
+		$record->lname = "Zhang";
 		$record->phone = "44144414";
-		$record->birthday = "1994-01-01";
+		$record->birthday = "1800-01-01";
 		$record->gender = "male";
 		$record->password = "31s";
 		$record->GoFunction("Update");	//Run Update() in modol class and echo success or not
