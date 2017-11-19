@@ -28,11 +28,13 @@ define("password", "luy642EA2");
 define("databasesoftware", "mysql");
 define("hostwebsite", "sql.njit.edu");
 
-new htmlpage();
+new htmlpage();	//instantiate main page
 
-class htmlpage{
-	private $html;
-	public function __construct(){
+class htmlpage{	//Weaver main page
+
+	private $html;	//Main page string
+
+	public function __construct(){	//Write main page
 	$this->html = "	<html lang='en'>
 			<head>
 				<meta charset='utf-8'>
@@ -42,8 +44,8 @@ class htmlpage{
 				<link rel='stylesheet' href='css/styles.css?v=1.0'>
 			</head>
 			<body>";
-	$this->htmlform();
-	$this->autoshowtable();
+	$this->htmlform();	//form-post of main page
+	$this->autoshowtable();	//Run e.g. account::ShowData and return table of main page
 	}
 
 
@@ -61,19 +63,21 @@ class htmlpage{
 			unset($Allcollectionfunctions[0]);
 			foreach ($Allcollectionfunctions as $functionname)
 				$this->html .="<option value=$functionname>$functionname</option>";
+	//two select tools. List all collection's function except execute()	
+
 	$this->html .= '</select>
 
 			<input type="submit" value="Run" name="submit">
 			</form>';
 	}
 	
-	public function autoshowtable() {
+	public function autoshowtable() {//Run e.g. account::ShowData and return table of main page
 		if(isset($_POST["submit"])) {
 			$this->html .= $_POST["databasename"]::$_POST["collection"]();
 		}
 	}
 
-	public function __destruct() {
+	public function __destruct() {	//display main page
 	$this->html .= "</body>";
 	$this->html .= "</html>";
 	echo $this->html;
@@ -86,9 +90,9 @@ class htmlpage{
 
 
 
-abstract class collections{
+abstract class collections{	//Save functions of SQL Operation by ActiveRecord
 
-	static public function executeScode($Scode){
+	static public function executeScode($Scode){	//Execute SQL code and return table display html string
 		$conn = Database::connect();
 		if($conn){			
 			$launchcode = $conn->prepare($Scode);
@@ -100,29 +104,29 @@ abstract class collections{
 		}
 	}
 
-	static public function ShowData($id = ""){
+	static public function ShowData($id = ""){	//makeup select * from database 
 		$id = ($id !== "") ? "= " . $id : "";
 		$Scode = 'SELECT * FROM ' . get_called_class() . " WHERE id " . $id;
 		$Result = self::executeScode($Scode);
-		return table::tablecontect($Result, $Scode);
+		return table::tablecontect($Result, $Scode);	//return display html table code
 	}
 
-	static public function ShowDataID_5(){
+	static public function ShowDataID_5(){	//call ShowData to select * from database where id = 5
 		$Result = self::ShowData("5");
 		return $Result;
 	}
 
-	static public function SQLDelete(){
-		$record = new static::$modelNM();
+	static public function SQLDelete(){	//Use ActiveRecord to Generate and Run SQL code
+		$record = new static::$modelNM();	//instantiate new object
 		$record->fname = "Dalven";
 		$record->lname = "Kelwen";
-		$record->GoFunction("Delete");
-		return self::showData();
+		$record->GoFunction("Delete");	//Run Delete() in modol class and echo success or not
+		return self::showData();	//return display html table code from ShowData
 	}
 
-	static public function SQLUpdate(){
-		$record = new static::$modelNM();
-		$record->id = 7;
+	static public function SQLUpdate_11(){	//Use ActiveRecord to Generate and Run SQL code
+		$record = new static::$modelNM();	//instantiate new object
+		$record->id = 10;
 		$record->email = 'kel@njit.edu';
 		$record->fname = "Dalven";
 		$record->lname = "Kelwen";
@@ -130,13 +134,13 @@ abstract class collections{
 		$record->birthday = "1994-01-01";
 		$record->gender = "male";
 		$record->password = "31s";
-		$record->GoFunction("Update");
-		return self::showData();		
+		$record->GoFunction("Update");	//Run Update() in modol class and echo success or not
+		return self::showData();	//return display html table code from ShowData	
 	}
 
-	static public function SQLInsert(){
-		$record = new static::$modelNM();
-		$record->id = 7;	//Will be UNSET()
+	static public function SQLInsert(){	//Use ActiveRecord to Generate and Run SQL code
+		$record = new static::$modelNM();	//instantiate new object
+		$record->id = 7;	//Will be UNSET() in object
 		$record->email = 'kel@njit.edu';
 		$record->fname = "Dalven";
 		$record->lname = "Kelwen";
@@ -144,8 +148,8 @@ abstract class collections{
 		$record->birthday = "1994-01-01";
 		$record->gender = "male";
 		$record->password = "31s";
-		$record->GoFunction("Insert");
-		return self::showData();
+		$record->GoFunction("Insert");	//Run Insert() in modol class and echo success or not
+		return self::showData();	//return display html table code from ShowData
 	}
 }
 
@@ -160,10 +164,10 @@ class todos extends collections{
 
 
 abstract class model{
-	public function GoFunction($action){
+	public function GoFunction($action){	//Call function to Compile and Run SQL code, echo operation state
 		$conn = Database::connect();
-		if($conn){
-			$content = get_object_vars($this);
+		if($conn){	//Do remains after connect
+			$content = get_object_vars($this);	//get all variable in child class
 			$Scode = $this->$action($content);
 			$launchcode = $conn->prepare($Scode); 
 			$Result = $launchcode->execute();
@@ -172,31 +176,31 @@ abstract class model{
 		}		
 	}
 
-	private function Insert($content) {
+	private function Insert($content) {	//Generate Insert Code with variable in child class
 	unset($content['id']);
 	$insertInto = "INSERT INTO " . get_called_class() . "s (";
-	$Keystring = implode(',', array_keys($content)) . ") ";
+	$Keystring = implode(',', array_keys($content)) . ") ";	//implode array to string
 	$valuestring = implode("','", $content);
 	$Scode = $insertInto . $Keystring . "VALUES ('" . $valuestring . "');";
 	return $Scode;
 	}
 
-	private function Update($content) {
+	private function Update($content) {	//Generate Update Code with variable in child class
 	$where = " WHERE id = " . $content['id'];
 	unset($content['id']);
 	$update = "UPDATE " . get_called_class() . "s SET ";
-	foreach ($content as $key => $value)
+	foreach ($content as $key => $value)	//find variable with value to update
 		$update .= ($value !== Null) ? " $key = \"$value\", " : "";
 	$update = substr($update, 0, -2);
-	$Scode = $update . $where;
+	$Scode = $update . $where;		//cut its last string of ","
 	return $Scode;
 	}
 
-	private function Delete($content) {
+	private function Delete($content) {	//Generate Delete Code with variable in child class
 	$where = " WHERE";
-	foreach ($content as $key => $value)
+	foreach ($content as $key => $value)	//find variable with value to designate deleting line
 		$where .= ($value !== Null) ? " $key = \"$value\" AND" : "";
-	$where = substr($where, 0, -4);
+	$where = substr($where, 0, -4);		//cut its last string of "and"
 	$Scode = "DELETE FROM " .  get_called_class() . "s" . $where . ";";
 	return $Scode;
 	}
@@ -204,7 +208,7 @@ abstract class model{
 	//private function Find() {}
 }
 
-class account extends model{
+class account extends model{	//Variables of table accounts 
 	public $id;
 	public $email;
 	public $fname;
@@ -215,7 +219,7 @@ class account extends model{
 	public $password;
 }
 
-class todo extends model{
+class todo extends model{	//Variables of table todos
 	public $id;
 	public $owneremail;
 	public $ownerid;

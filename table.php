@@ -21,6 +21,6 @@ class table {
 				$str .= "</tr>";
 		}
 		$str .= "</table></div>";
-		return $str;	//answer question and display result
+		return $str;	//return result to $html
 	}
 }

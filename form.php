@@ -10,8 +10,8 @@ class form{
 	$msg .= '</select>';
 
 	$msg .= '<select name="collection">';
-	$Allfunctions = get_class_methods("collections");
-	unset($Allfunctions[0]);
+	$Allfunctions = get_class_methods("collections");	//get all collection function
+	unset($Allfunctions[0]);				//remove execute function
 	foreach ($Allfunctions as $functionname)
 	$msg .="<option value=$functionname>$functionname</option>";
 	$msg .= '</select>';
